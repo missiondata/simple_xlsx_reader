@@ -88,10 +88,11 @@ module SimpleXlsxReader
             i = 0
             loop do
               i += 1
-              break if !zip.file.file?("xl/worksheets/sheet#{i}.xml")
+              sheet_file_name = (i == 1 && zip.file.file?("xl/worksheets/sheet.xml")) ? "xl/worksheets/sheet.xml" : "xl/worksheets/sheet#{i}.xml"
+              break unless zip.file.file?(sheet_file_name)
 
               xml.sheets <<
-                Nokogiri::XML(zip.read("xl/worksheets/sheet#{i}.xml")).remove_namespaces!
+                Nokogiri::XML(zip.read(sheet_file_name)).remove_namespaces!
             end
           end
         end
